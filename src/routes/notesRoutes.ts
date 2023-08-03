@@ -10,7 +10,7 @@ router.post('/api/notes', (req: express.Request, res: express.Response) => {
   try {
     const { name = 'Note'+Number(notes.length + 1), content = '', category = 'Task', datesMentioned = [], archived = false } = req.body;
     const note: Note = {
-      id: Date.now(), // You can use a proper ID generation mechanism here
+      id: Date.now(),
       name,
       createdAt: new Date().toISOString(),
       content,
