@@ -1,8 +1,9 @@
 import express from 'express';
+import dotenv from 'dotenv';
+import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import notesRoutes from './routes/notesRoutes';
-import mongoose from 'mongoose';
-import dotenv from 'dotenv';
+import globalErrorHandler from './middlewares/global-handle-error';
 
 dotenv.config();
 
@@ -18,8 +19,10 @@ mongoose
   // Routes
   app.use('/api', notesRoutes);
     
+  app.use(globalErrorHandler)
+    
   // Start the server
-  app.listen(PORT, () => {
+  app.listen(PORT || 3001, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
   });
 })
