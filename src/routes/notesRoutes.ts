@@ -3,92 +3,32 @@ import { notesService } from '../services/notesService';
 import { validateNote, validateId } from '../helpers/validation';
 import { Note } from '../models/noteModel';
 import dateParser from '../helpers/dateParser';
-dateParser
+import controllerExceptionWrapper from '../middlewares/controllerExceptionWrapper';
+
+import {
+  createNote,
+  deleteNoteById,
+  updateNoteById,
+  getAggregatedStats,
+  getNoteById,
+  getAllNotes,
+} from '../controllers/notesController';
+
+controllerExceptionWrapper
 
 const router = express.Router();
 
-router.post('/notes', async (req: express.Request, res: express.Response) => {
-  try {
-    const { name = 'New note', content = '', category = 'Task', archived = false } = req.body;
-      const datesMentioned = dateParser(content);
-      const note: Note = {
-      name,
-      createdAt: new Date().toISOString(),
-      content,
-      category,
-      datesMentioned,
-      archived,
-    };
-    validateNote(note);
-    const createdNote = await notesService.createNote(note);
-    res.json(createdNote);
-  } catch (error) {
-    res.status(400).json({ error });
-  }
-});
+router.post('/notes', controllerExceptionWrapper(createNote))
 
-router.delete('/notes/:id', async (req: express.Request, res: express.Response) => {
-  try {
-    const id = req.params.id.toString();
-    validateId(id);
-    const deletedNote = await notesService.deleteNoteById(id);
-    if (deletedNote === null) {
-      res.status(404).json({ error: 'Note not found' });
-    } else {
-      res.json(deletedNote);
-    }
-  } catch (error) {
-    if (error.message === 'Note not found') {
-      res.status(404).json({ error: 'Note not found' });
-    } else {
-      res.status(400).json({ error: error.message });
-    }
-  }
-});
+router.delete('/notes/:id', controllerExceptionWrapper(deleteNoteById))
 
-router.patch('/notes/:id', async (req: express.Request, res: express.Response) => {
-  try {
-    const id = req.params.id.toString();
-    const updatedNote = req.body as Note;
-    const datesMentioned = dateParser(updatedNote.content);
-    updatedNote.datesMentioned = datesMentioned;
-    validateId(id);
-    validateNote(updatedNote);
-    const updatedNoteResult = await notesService.updateNoteById(id, updatedNote);
-    res.json(updatedNoteResult);
-  } catch (error) {
-    res.status(400).json({ error });
-  }
-});
+router.patch('/notes/:id', controllerExceptionWrapper(updateNoteById))
 
-router.get('/notes/stats', async (req: express.Request, res: express.Response) => {
-  try {
-    const totalNotes = await notesService.getAggregatedStats();
-    res.json(totalNotes);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to get stats' });
-  }
-});
+router.get('/notes/stats', controllerExceptionWrapper(getAggregatedStats))
 
-router.get('/notes/:id', async (req: express.Request, res: express.Response) => {
-  try {
-    const id = req.params.id.toString();
-    validateId(id);
-    const note = await notesService.getNoteById(id);
-    if (note === null) {
-      res.status(404).json({ error: 'Note not found' });
-    } else {
-      res.json(note);
-    }
-  } catch (error) {
-    res.status(400).json({ error });
-  }
-});
+router.get('/notes/:id',controllerExceptionWrapper(getNoteById));
 
-router.get('/notes', async (req: express.Request, res: express.Response) => {
-  const notes = await notesService.getAllNotes();
-  res.json(notes);
-});
+router.get('/notes', controllerExceptionWrapper(getAllNotes))
 
 
 

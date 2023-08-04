@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import notesRoutes from './routes/notesRoutes';
-import globalErrorHandler from './middlewares/global-handle-error';
+import globalErrorHandler from './middlewares/globalHandleError';
 
 dotenv.config();
 
