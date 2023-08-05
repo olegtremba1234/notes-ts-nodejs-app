@@ -190,37 +190,40 @@
       }
     }
   },
-  "definitions": {
-    "Note": {
-        "type": "object",
-        "properties": {
-            "name": { 
-                "type": "string"
-            },
-            "createdAt": {
-                 "type": "string"
-                },
-            "content": { 
-                "type": "string"
-            },
-            "category": { 
-                "type": "string",
-                 "enum": [
-                    "Task", 
-                    "Random Thought",
-                    "Idea"
-                    ]
-                },
-            "datesMentioned": {
-                 "type": ["string"],
-                  "default": [] 
-                },
-            "archived": {
-                 "type": "Boolean",
-                  "default": false 
-                }
-            }
+  "components":{
+    "schemas": {
+      "Note": {
+          "type": "object",
+          "properties": {
+              "name": { 
+                  "type": "string"
+              },
+              "createdAt": {
+                   "type": "string"
+                  },
+              "content": { 
+                  "type": "string"
+              },
+              "category": { 
+                  "type": "string",
+                   "enum": [
+                      "Task", 
+                      "Random Thought",
+                      "Idea"
+                      ]
+                  },
+              "datesMentioned": {
+                   "type": ["string"],
+                    "default": [] 
+                  },
+              "archived": {
+                   "type": "Boolean",
+                    "default": false 
+                  }
+              }
+  
+          }
+      }
 
-        }
-    }
+  }
 }
