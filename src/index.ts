@@ -4,6 +4,8 @@ import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import notesRoutes from './routes/notesRoutes';
 import globalErrorHandler from './middlewares/globalHandleError';
+import swaggerUi from 'swagger-ui-express';
+const swaggerDocument = require('../swagger.json');
 
 dotenv.config();
 
@@ -19,7 +21,9 @@ mongoose
   // Routes
   app.use('/api', notesRoutes);
     
-  app.use(globalErrorHandler)
+    app.use(globalErrorHandler)
+    
+    app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
     
   // Start the server
   app.listen(PORT || 3001, () => {
