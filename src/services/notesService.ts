@@ -1,6 +1,8 @@
+import { updateNoteById } from './../controllers/notesController';
 import mongoose from 'mongoose';
 import NoteModel, { Note, NoteCategory } from '../models/noteModel';
 import { validateNote, validateId } from '../helpers/validation';
+import dateParser from '../helpers/dateParser';
 
 class NotesService {
   async getAllNotes(): Promise<Note[]> {
@@ -20,15 +22,18 @@ class NotesService {
 
   async createNote(note: Note): Promise<Note> {
     await validateNote(note);
-    return NoteModel.create({ ...note, archived: false });
+    const datesMentioned = dateParser(note.content);
+    return NoteModel.create({ ...note, archived: false, datesMentioned });
   }
 
   async updateNoteById(id: string, updatedNote: Note): Promise<Note | null> {
     await validateId(id);
     await validateNote(updatedNote);
+    const datesMentioned = dateParser(updatedNote.content);
   try {
     const noteId = new mongoose.Types.ObjectId(id);
-    return NoteModel.findByIdAndUpdate(noteId, updatedNote, { new: true }).exec();
+    const updateNoteWithDates = {...updatedNote, datesMentioned}
+    return NoteModel.findByIdAndUpdate(noteId, updateNoteWithDates, { new: true }).exec();
   } catch (error) {
     console.error('Error updating note by ID:', error);
     return null;
