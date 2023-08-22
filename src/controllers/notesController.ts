@@ -16,7 +16,7 @@ export const createNote = async (
   } = req.body;
   const note: Note = {
     name,
-    createdAt: new Date(Date.now()).toLocaleString(),
+    createdAt: new Date(Date.now()),
     content,
     category,
     datesMentioned,
